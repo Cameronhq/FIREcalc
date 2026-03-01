@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Slider } from "@/components/ui/slider";
@@ -42,6 +42,81 @@ function QuickTag({
     >
       {label}
     </button>
+  );
+}
+
+function parseInput(raw: string): number {
+  const cleaned = raw.replace(/[¥,，\s]/g, "");
+  if (/万$/.test(cleaned)) {
+    const num = parseFloat(cleaned.replace(/万$/, ""));
+    return isNaN(num) ? 0 : Math.round(num * 10000);
+  }
+  const num = parseFloat(cleaned);
+  return isNaN(num) ? 0 : Math.round(num);
+}
+
+function EditableNumber({
+  value,
+  onChange,
+  prefix = "",
+  format,
+  min,
+  max,
+  className,
+}: {
+  value: number;
+  onChange: (v: number) => void;
+  prefix?: string;
+  format: (n: number) => string;
+  min: number;
+  max: number;
+  className?: string;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const startEdit = () => {
+    setDraft(String(value));
+    setEditing(true);
+    setTimeout(() => inputRef.current?.select(), 10);
+  };
+
+  const commit = () => {
+    const parsed = parseInput(draft);
+    const clamped = Math.max(min, Math.min(max, parsed));
+    onChange(clamped);
+    setEditing(false);
+  };
+
+  if (editing) {
+    return (
+      <input
+        ref={inputRef}
+        type="text"
+        inputMode="numeric"
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => e.key === "Enter" && commit()}
+        className={`bg-transparent text-center text-white font-extrabold font-sans leading-none outline-none border-b-2 border-accent/40 focus:border-accent caret-accent ${className}`}
+        autoFocus
+      />
+    );
+  }
+
+  return (
+    <motion.p
+      key={value}
+      className={`font-extrabold font-sans text-white leading-none cursor-pointer hover:text-accent/80 transition-colors ${className}`}
+      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      onClick={startEdit}
+      title={prefix ? "Click to edit" : "Click to edit"}
+    >
+      {prefix}{format(value)}
+    </motion.p>
   );
 }
 
@@ -188,15 +263,16 @@ export function StepWizard() {
                   {t.onboarding.steps[0].subtitle}
                 </p>
 
-                <motion.p
-                  key={age}
-                  className="text-[64px] sm:text-[96px] font-extrabold font-sans text-white leading-none mb-8"
-                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  {age}
-                </motion.p>
+                <div className="mb-8">
+                  <EditableNumber
+                    value={age}
+                    onChange={setAge}
+                    format={(n) => String(n)}
+                    min={18}
+                    max={65}
+                    className="text-[64px] sm:text-[96px]"
+                  />
+                </div>
 
                 <div className="max-w-sm mx-auto">
                   <Slider
@@ -227,15 +303,17 @@ export function StepWizard() {
                   {t.onboarding.steps[2].subtitle}
                 </p>
 
-                <motion.p
-                  key={netWorth}
-                  className="text-[36px] sm:text-[56px] font-extrabold font-sans text-white leading-none mb-6"
-                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  ¥{formatNum(netWorth)}
-                </motion.p>
+                <div className="mb-6">
+                  <EditableNumber
+                    value={netWorth}
+                    onChange={setNetWorth}
+                    prefix="¥"
+                    format={formatNum}
+                    min={0}
+                    max={10000000}
+                    className="text-[36px] sm:text-[56px]"
+                  />
+                </div>
 
                 <div className="flex flex-wrap justify-center gap-2 mb-8">
                   {QUICK_NET_WORTH.map((v) => (
@@ -270,15 +348,17 @@ export function StepWizard() {
                   {locale === "zh" ? "年支出" : "Annual Expenses"}
                 </h2>
 
-                <motion.p
-                  key={annualExpenses}
-                  className="text-[36px] sm:text-[56px] font-extrabold font-sans text-white leading-none mb-4 mt-6"
-                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  ¥{formatNum(annualExpenses)}
-                </motion.p>
+                <div className="mb-4 mt-6">
+                  <EditableNumber
+                    value={annualExpenses}
+                    onChange={setAnnualExpenses}
+                    prefix="¥"
+                    format={formatNum}
+                    min={30000}
+                    max={600000}
+                    className="text-[36px] sm:text-[56px]"
+                  />
+                </div>
 
                 <div className="flex flex-wrap justify-center gap-2 mb-6">
                   {QUICK_EXPENSES.map((v) => (
@@ -305,15 +385,17 @@ export function StepWizard() {
                   {locale === "zh" ? "年收入" : "Annual Income"}
                 </h2>
 
-                <motion.p
-                  key={annualIncome}
-                  className="text-[36px] sm:text-[56px] font-extrabold font-sans text-white leading-none mb-4 mt-6"
-                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  ¥{formatNum(annualIncome)}
-                </motion.p>
+                <div className="mb-4 mt-6">
+                  <EditableNumber
+                    value={annualIncome}
+                    onChange={setAnnualIncome}
+                    prefix="¥"
+                    format={formatNum}
+                    min={50000}
+                    max={2000000}
+                    className="text-[36px] sm:text-[56px]"
+                  />
+                </div>
 
                 <div className="flex flex-wrap justify-center gap-2 mb-6">
                   {QUICK_INCOME.map((v) => (

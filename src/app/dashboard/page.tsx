@@ -116,10 +116,7 @@ export default function DashboardPage() {
                   : "AI grading · Risk alerts · Action steps"}
               </p>
             </div>
-            <div className="text-right">
-              <span className="text-[18px] font-extrabold text-white">$9.9</span>
-              <p className="text-[10px] text-[#555]">USD</p>
-            </div>
+            <span className="text-[14px] text-[#555]">→</span>
           </div>
         </a>
       </div>

@@ -9,7 +9,6 @@ export const translations = {
       home: "首页",
       dashboard: "仪表盘",
       analysis: "分析",
-      feed: "资讯",
     },
 
     // Landing page
@@ -131,6 +130,7 @@ export const translations = {
         yearsToFire: "距离FIRE",
         fireAge: "预计退休年龄",
         fireNumber: "目标金额",
+        savingsRate: "储蓄率",
       },
       alreadyFired: {
         title: "恭喜！你已经实现了财务自由",
@@ -153,7 +153,6 @@ export const translations = {
       tabs: {
         dashboard: "仪表盘",
         analysis: "分析报告",
-        feed: "资讯",
       },
       fireModel: {
         title: "FIRE 模式",
@@ -206,21 +205,6 @@ export const translations = {
       actionSteps: "行动建议",
     },
 
-    // Feed page
-    feed: {
-      title: "FIRE 资讯",
-      subtitle: "为你量身定制的财务自由内容",
-      categories: {
-        all: "全部",
-        strategy: "策略",
-        investing: "投资",
-        lifestyle: "生活方式",
-        tax: "税务",
-        mindset: "思维",
-      },
-      readTime: "分钟阅读",
-    },
-
     // Common
     common: {
       currency: "¥",
@@ -238,7 +222,6 @@ export const translations = {
       home: "Home",
       dashboard: "Dashboard",
       analysis: "Analysis",
-      feed: "Feed",
     },
 
     // Landing page
@@ -362,6 +345,7 @@ export const translations = {
         yearsToFire: "Years to FIRE",
         fireAge: "Retirement Age",
         fireNumber: "FIRE Number",
+        savingsRate: "Savings Rate",
       },
       alreadyFired: {
         title: "Congratulations! You've already achieved financial independence",
@@ -384,7 +368,6 @@ export const translations = {
       tabs: {
         dashboard: "Dashboard",
         analysis: "Analysis",
-        feed: "Feed",
       },
       fireModel: {
         title: "FIRE Model",
@@ -435,21 +418,6 @@ export const translations = {
       grade: "Financial Health Grade",
       redFlags: "Issues to Address",
       actionSteps: "Action Steps",
-    },
-
-    // Feed page
-    feed: {
-      title: "FIRE Feed",
-      subtitle: "Curated financial independence content for you",
-      categories: {
-        all: "All",
-        strategy: "Strategy",
-        investing: "Investing",
-        lifestyle: "Lifestyle",
-        tax: "Tax",
-        mindset: "Mindset",
-      },
-      readTime: "min read",
     },
 
     // Common

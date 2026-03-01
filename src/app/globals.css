@@ -2,26 +2,108 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: rgba(255, 255, 255, 0.04);
   }
-}
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  html {
+    background: #050505;
+    color: #fafafa;
+  }
+
+  body {
+    background: #050505;
+    color: #fafafa;
+    font-family: var(--font-sora), sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .font-cn {
+    font-family: var(--font-noto), sans-serif;
   }
+  .font-serif-display {
+    font-family: var(--font-instrument), serif;
+    font-style: italic;
+  }
+
+  .text-gradient-green {
+    background: linear-gradient(135deg, #4ade80, #38bdf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-warm {
+    background: linear-gradient(135deg, #fafafa 30%, #4ade80);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+  }
+
+  .glass-card-hover:hover {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .glow-cta {
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.12);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 60px rgba(74, 222, 128, 0.15);
+  }
+
+  .number-input::-webkit-inner-spin-button,
+  .number-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .number-input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  .stagger-1 { animation-delay: 0.2s; }
+  .stagger-2 { animation-delay: 0.35s; }
+  .stagger-3 { animation-delay: 0.5s; }
+  .stagger-4 { animation-delay: 0.65s; }
+  .stagger-5 { animation-delay: 0.8s; }
+}
+
+/* Film grain overlay */
+.film-grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0.018;
+  animation: grain-shift 8s steps(10) infinite;
+}
+
+.film-grain svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes grain-shift {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -10%); }
+  20% { transform: translate(-15%, 5%); }
+  30% { transform: translate(7%, -25%); }
+  40% { transform: translate(-5%, 25%); }
+  50% { transform: translate(-15%, 10%); }
+  60% { transform: translate(15%, 0%); }
+  70% { transform: translate(0%, 15%); }
+  80% { transform: translate(3%, 35%); }
+  90% { transform: translate(-10%, 10%); }
 }

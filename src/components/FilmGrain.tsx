@@ -1,0 +1,19 @@
+"use client";
+
+export function FilmGrain() {
+  return (
+    <div className="film-grain" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg">
+        <filter id="grain">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.75"
+            numOctaves="4"
+            stitchTiles="stitch"
+          />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#grain)" />
+      </svg>
+    </div>
+  );
+}

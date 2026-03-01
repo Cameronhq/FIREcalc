@@ -43,18 +43,14 @@ function CustomTooltip({
 
   return (
     <div className="glass-card p-3 text-xs shadow-xl">
-      <p className="text-white/70 mb-2">
+      <p className="text-[#888] mb-2">
         {locale === "zh" ? `第 ${label} 年 (${age} 岁)` : `Year ${label} (Age ${age})`}
       </p>
       {payload.map((entry) => (
         <p key={entry.name} style={{ color: entry.color }} className="mb-1">
           {entry.name === "netWorth"
-            ? locale === "zh"
-              ? "净资产"
-              : "Net Worth"
-            : locale === "zh"
-            ? "FIRE目标"
-            : "FIRE Target"}
+            ? locale === "zh" ? "净资产" : "Net Worth"
+            : locale === "zh" ? "FIRE目标" : "FIRE Target"}
           :{" "}
           {formatCurrency(entry.value, locale, true)}
         </p>
@@ -83,7 +79,7 @@ export default function ProjectionChart({
 
   if (!chartData || chartData.length === 0) {
     return (
-      <div className="flex h-64 items-center justify-center text-white/40">
+      <div className="flex h-64 items-center justify-center text-[#444]">
         {locale === "zh" ? "暂无数据" : "No data available"}
       </div>
     );
@@ -97,71 +93,70 @@ export default function ProjectionChart({
       >
         <defs>
           <linearGradient id="netWorthGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-            <stop offset="95%" stopColor="#10b981" stopOpacity={0.02} />
+            <stop offset="5%" stopColor="#4ade80" stopOpacity={0.15} />
+            <stop offset="95%" stopColor="#4ade80" stopOpacity={0} />
           </linearGradient>
+          <filter id="chart-glow">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+        <CartesianGrid
+          strokeDasharray="0"
+          stroke="rgba(255,255,255,0.03)"
+          vertical={false}
+        />
         <XAxis
           dataKey="year"
-          tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
-          axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+          tick={{ fill: "#333", fontSize: 9, fontFamily: "var(--font-sora)" }}
+          axisLine={{ stroke: "rgba(255,255,255,0.03)" }}
           tickLine={false}
-          label={{
-            value: locale === "zh" ? "年" : "Years",
-            position: "insideRight",
-            offset: -5,
-            fill: "rgba(255,255,255,0.3)",
-            fontSize: 11,
-          }}
         />
         <YAxis
-          tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+          tick={{ fill: "#333", fontSize: 9, fontFamily: "var(--font-sora)" }}
           axisLine={false}
           tickLine={false}
           tickFormatter={(v) => formatYAxisTick(v, locale)}
           width={55}
         />
-        <Tooltip
-          content={
-            <CustomTooltip locale={locale} />
-          }
-        />
-        {/* Net worth area */}
+        <Tooltip content={<CustomTooltip locale={locale} />} />
         <Area
           type="monotone"
           dataKey="netWorth"
           name="netWorth"
-          stroke="#10b981"
-          strokeWidth={2.5}
+          stroke="#4ade80"
+          strokeWidth={2}
           fill="url(#netWorthGradient)"
           dot={false}
-          activeDot={{ r: 4, fill: "#10b981" }}
+          activeDot={{ r: 5, fill: "#4ade80", filter: "url(#chart-glow)" }}
         />
-        {/* FIRE target dashed line */}
         <Area
           type="monotone"
           dataKey="fireTarget"
           name="fireTarget"
-          stroke="#ef4444"
-          strokeWidth={1.5}
+          stroke="#f87171"
+          strokeWidth={1}
           strokeDasharray="5 4"
+          strokeOpacity={0.5}
           fill="none"
           dot={false}
-          activeDot={{ r: 3, fill: "#ef4444" }}
+          activeDot={{ r: 3, fill: "#f87171" }}
         />
-        {/* Crossover reference line */}
         {crossoverYear !== null && crossoverYear !== undefined && crossoverYear > 0 && (
           <ReferenceLine
             x={crossoverYear}
-            stroke="#f59e0b"
-            strokeWidth={1.5}
+            stroke="#4ade80"
+            strokeWidth={1}
             strokeDasharray="4 3"
+            strokeOpacity={0.4}
             label={{
-              value: locale === "zh" ? "FIRE!" : "FIRE!",
+              value: "FREEDOM",
               position: "top",
-              fill: "#f59e0b",
-              fontSize: 11,
+              fill: "#4ade80",
+              fontSize: 9,
               fontWeight: 600,
             }}
           />
